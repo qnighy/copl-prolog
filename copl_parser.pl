@@ -26,6 +26,18 @@ parse_prop(Tokens, evalto(E, N), Rem) :-
   parse_exp(Tokens, E, ['evalto'|Rem1]),
   parse_nat(Rem1, N, Rem),
   !.
+parse_prop(Tokens, reduce(E1, E2), Rem) :-
+  parse_exp(Tokens, E1, ['--->'|Rem1]),
+  parse_exp(Rem1, E2, Rem),
+  !.
+parse_prop(Tokens, reduce_d(E1, E2), Rem) :-
+  parse_exp(Tokens, E1, ['-d->'|Rem1]),
+  parse_exp(Rem1, E2, Rem),
+  !.
+parse_prop(Tokens, reduce_m(E1, E2), Rem) :-
+  parse_exp(Tokens, E1, ['-*->'|Rem1]),
+  parse_exp(Rem1, E2, Rem),
+  !.
 
 parse_exp(S, E) :-
   string(S),
@@ -88,6 +100,15 @@ tokenize([CharsH|CharsT], [Ident|Tokens]) :-
   extract_alnum(CharsT, Alnums, Rem),
   atomic_list_concat([CharsH|Alnums], Ident),
   tokenize(Rem, Tokens).
+tokenize(['-', '-', '-', '>'|CharsT], ['--->'|Tokens]) :-
+  !,
+  tokenize(CharsT, Tokens).
+tokenize(['-', 'd', '-', '>'|CharsT], ['-d->'|Tokens]) :-
+  !,
+  tokenize(CharsT, Tokens).
+tokenize(['-', '*', '-', '>'|CharsT], ['-*->'|Tokens]) :-
+  !,
+  tokenize(CharsT, Tokens).
 tokenize([CharsH|CharsT], [CharsH|Tokens]) :-
   tokenize(CharsT, Tokens).
 

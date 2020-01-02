@@ -57,6 +57,21 @@ pp_prop(evalto(E, N), S) :-
   pp_exp(E, ES),
   pp_nat(N, NS),
   atomics_to_string([ES, " evalto ", NS], S).
+pp_prop(reduce(E1, E2), S) :-
+  !,
+  pp_exp(E1, E1S),
+  pp_exp(E2, E2S),
+  atomics_to_string([E1S, " ---> ", E2S], S).
+pp_prop(reduce_d(E1, E2), S) :-
+  !,
+  pp_exp(E1, E1S),
+  pp_exp(E2, E2S),
+  atomics_to_string([E1S, " -d-> ", E2S], S).
+pp_prop(reduce_m(E1, E2), S) :-
+  !,
+  pp_exp(E1, E1S),
+  pp_exp(E2, E2S),
+  atomics_to_string([E1S, " -*-> ", E2S], S).
 pp_prop(Prop, S) :-
   term_string(Prop, PropS),
   atomics_to_string(["<cannot pp ", PropS, ">"], S).

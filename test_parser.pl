@@ -24,6 +24,15 @@
   test(parse_evalto) :-
     parse_prop("Z + Z evalto Z", Prop),
     assertion(Prop == evalto(plus(nat(z), nat(z)), z)).
+  test(parse_reduce) :-
+    parse_prop("Z + Z ---> Z", Prop),
+    assertion(Prop == reduce(plus(nat(z), nat(z)), nat(z))).
+  test(parse_reduce_d) :-
+    parse_prop("Z + Z -d-> Z", Prop),
+    assertion(Prop == reduce_d(plus(nat(z), nat(z)), nat(z))).
+  test(parse_reduce_m) :-
+    parse_prop("Z + Z -*-> Z", Prop),
+    assertion(Prop == reduce_m(plus(nat(z), nat(z)), nat(z))).
 :- end_tests(parse_prop).
 
 :- begin_tests(parse_exp).
@@ -72,6 +81,9 @@
   test(tokenize_ident_2) :-
     tokenize("\tfoo bar2  baz\n", Tokens),
     assertion(Tokens == [foo, bar2, baz]).
+  test(tokenize_arrows) :-
+    tokenize("--->-*->-d->", Tokens),
+    assertion(Tokens == ['--->', '-*->', '-d->']).
 :- end_tests(tokenize).
 
 :- run_tests.

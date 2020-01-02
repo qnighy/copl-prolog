@@ -47,6 +47,15 @@
   test(pp_evalto) :-
     pp_prop(evalto(plus(nat(z), nat(z)), z), S),
     assertion(S == "Z + Z evalto Z").
+  test(pp_reduce) :-
+    pp_prop(reduce(plus(nat(z), nat(z)), nat(z)), S),
+    assertion(S == "Z + Z ---> Z").
+  test(pp_reduce_d) :-
+    pp_prop(reduce_d(plus(nat(z), nat(z)), nat(z)), S),
+    assertion(S == "Z + Z -d-> Z").
+  test(pp_reduce_m) :-
+    pp_prop(reduce_m(plus(nat(z), nat(z)), nat(z)), S),
+    assertion(S == "Z + Z -*-> Z").
 :- end_tests(pp_prop).
 
 :- begin_tests(pp_exp).
