@@ -44,7 +44,34 @@
   test(pp_is_less_than_0) :-
     pp_prop(is_less_than(z, s(z)), S),
     assertion(S == "Z is less than S(Z)").
+  test(pp_evalto) :-
+    pp_prop(evalto(plus(nat(z), nat(z)), z), S),
+    assertion(S == "Z + Z evalto Z").
 :- end_tests(pp_prop).
+
+:- begin_tests(pp_exp).
+  test(pp_exp_nat_0) :-
+    pp_exp(nat(z), S),
+    assertion(S == "Z").
+  test(pp_exp_nat_1) :-
+    pp_exp(nat(s(z)), S),
+    assertion(S == "S(Z)").
+  test(pp_exp_plus_0) :-
+    pp_exp(plus(nat(s(s(z))), nat(z)), S),
+    assertion(S == "S(S(Z)) + Z").
+  test(pp_exp_plus_1) :-
+    pp_exp(plus(plus(nat(z), nat(s(z))), nat(z)), S),
+    assertion(S == "Z + S(Z) + Z").
+  test(pp_exp_plus_2) :-
+    pp_exp(plus(nat(z), plus(nat(s(z)), nat(z))), S),
+    assertion(S == "Z + (S(Z) + Z)").
+  test(pp_exp_times_0) :-
+    pp_exp(times(plus(nat(z), nat(s(z))), nat(z)), S),
+    assertion(S == "(Z + S(Z)) * Z").
+  test(pp_exp_times_1) :-
+    pp_exp(plus(nat(z), times(nat(s(z)), nat(z))), S),
+    assertion(S == "Z + S(Z) * Z").
+:- end_tests(pp_exp).
 
 :- begin_tests(pp_nat).
   test(pp_nat_0) :-

@@ -21,7 +21,34 @@
   test(parse_is_less_than_1) :-
     parse_prop("S(S(Z)) is less than S(S(S(Z)))", Prop),
     assertion(Prop == is_less_than(s(s(z)), s(s(s(z))))).
+  test(parse_evalto) :-
+    parse_prop("Z + Z evalto Z", Prop),
+    assertion(Prop == evalto(plus(nat(z), nat(z)), z)).
 :- end_tests(parse_prop).
+
+:- begin_tests(parse_exp).
+  test(parse_exp_nat_0) :-
+    parse_exp("Z", E),
+    assertion(E == nat(z)).
+  test(parse_exp_nat_1) :-
+    parse_exp("S(Z)", E),
+    assertion(E == nat(s(z))).
+  test(parse_exp_plus_0) :-
+    parse_exp("S(S(Z)) + Z", E),
+    assertion(E == plus(nat(s(s(z))), nat(z))).
+  test(parse_exp_plus_1) :-
+    parse_exp("Z + S(Z) + Z", E),
+    assertion(E == plus(plus(nat(z), nat(s(z))), nat(z))).
+  test(parse_exp_plus_2) :-
+    parse_exp("Z + (S(Z) + Z)", E),
+    assertion(E == plus(nat(z), plus(nat(s(z)), nat(z)))).
+  test(parse_exp_times_0) :-
+    parse_exp("(Z + S(Z)) * Z", E),
+    assertion(E == times(plus(nat(z), nat(s(z))), nat(z))).
+  test(parse_exp_times_1) :-
+    parse_exp("Z + S(Z) * Z", E),
+    assertion(E == plus(nat(z), times(nat(s(z)), nat(z)))).
+:- end_tests(parse_exp).
 
 :- begin_tests(parse_nat).
   test(parse_nat_0) :-

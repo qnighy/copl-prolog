@@ -1,6 +1,6 @@
 % vim: ft=prolog :
 
-:- module(copl_parser, [parse_prop/2, parse_nat/2, tokenize/2]).
+:- module(copl_parser, [parse_prop/2, parse_exp/2, parse_nat/2, tokenize/2]).
 
 parse_prop(S, Prop) :-
   string(S),
@@ -22,6 +22,41 @@ parse_prop(Tokens, is_less_than(N1, N2), Rem) :-
   parse_nat(Tokens, N1, ['is', 'less', 'than'|Rem1]),
   parse_nat(Rem1, N2, Rem),
   !.
+parse_prop(Tokens, evalto(E, N), Rem) :-
+  parse_exp(Tokens, E, ['evalto'|Rem1]),
+  parse_nat(Rem1, N, Rem),
+  !.
+
+parse_exp(S, E) :-
+  string(S),
+  !,
+  tokenize(S, Tokens),
+  parse_exp(Tokens, E).
+parse_exp(Tokens, N) :- parse_exp(Tokens, N, []).
+parse_exp(Tokens, E, Rem) :- parse_exp_plus(Tokens, E, Rem).
+parse_exp_plus(Tokens, E, Rem) :-
+  parse_exp_times(Tokens, E1, Rem1),
+  parse_exp_plus_cont(Rem1, E1, E, Rem).
+parse_exp_plus_cont(['+'|Tokens], EL, E, Rem) :-
+  !,
+  parse_exp_times(Tokens, ER, Rem1),
+  parse_exp_plus_cont(Rem1, plus(EL, ER), E, Rem).
+parse_exp_plus_cont(Tokens, E, E, Tokens).
+parse_exp_times(Tokens, E, Rem) :-
+  parse_exp_atom(Tokens, E1, Rem1),
+  parse_exp_times_cont(Rem1, E1, E, Rem).
+parse_exp_times_cont(['*'|Tokens], EL, E, Rem) :-
+  !,
+  parse_exp_atom(Tokens, ER, Rem1),
+  parse_exp_times_cont(Rem1, times(EL, ER), E, Rem).
+parse_exp_times_cont(Tokens, E, E, Tokens).
+parse_exp_atom(['('|Tokens], E, Rem) :-
+  !,
+  parse_exp(Tokens, E, [')'|Rem]).
+parse_exp_atom(Tokens, nat(N), Rem) :-
+  (Tokens = ['Z'|_]; Tokens = ['S'|_]),
+  !,
+  parse_nat(Tokens, N, Rem).
 
 parse_nat(S, N) :-
   string(S),

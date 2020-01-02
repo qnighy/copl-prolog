@@ -1,6 +1,6 @@
 % vim: ft=prolog :
 
-:- module(copl_pp, [pp_proof/2, pp_prop/2, pp_nat/2]).
+:- module(copl_pp, [pp_proof/2, pp_prop/2, pp_exp/2, pp_nat/2]).
 
 pp_proof(Proof, S) :-
   pp_proof(Proof, "", [], Parts),
@@ -52,9 +52,38 @@ pp_prop(is_less_than(N1, N2), S) :-
   pp_nat(N1, N1S),
   pp_nat(N2, N2S),
   atomics_to_string([N1S, " is less than ", N2S], S).
+pp_prop(evalto(E, N), S) :-
+  !,
+  pp_exp(E, ES),
+  pp_nat(N, NS),
+  atomics_to_string([ES, " evalto ", NS], S).
 pp_prop(Prop, S) :-
   term_string(Prop, PropS),
   atomics_to_string(["<cannot pp ", PropS, ">"], S).
+
+pp_exp(E, S) :-
+  (E = plus(_, _); E = times(_, _); E = nat(_)),
+  !,
+  pp_exp_plus(E, S).
+pp_exp(E, S) :-
+  term_string(E, ES),
+  atomics_to_string(["<cannot pp ", ES, ">"], S).
+pp_exp_plus(plus(E1, E2), S) :-
+  !,
+  pp_exp_plus(E1, S1),
+  pp_exp_times(E2, S2),
+  atomics_to_string([S1, " + ", S2], S).
+pp_exp_plus(E, S) :- pp_exp_times(E, S).
+pp_exp_times(times(E1, E2), S) :-
+  !,
+  pp_exp_times(E1, S1),
+  pp_exp_atom(E2, S2),
+  atomics_to_string([S1, " * ", S2], S).
+pp_exp_times(E, S) :- pp_exp_atom(E, S).
+pp_exp_atom(nat(N), S) :- !, pp_nat(N, S).
+pp_exp_atom(E1, S) :-
+  pp_exp(E1, S1),
+  atomics_to_string(["(", S1, ")"], S).
 
 pp_nat(z, "Z") :- !.
 pp_nat(s(N), S) :-
