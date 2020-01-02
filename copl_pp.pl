@@ -7,7 +7,7 @@ pp_proof(Proof, S) :-
   atomics_to_string(Parts, S).
 pp_proof(pf(Prop, Proof), I, Rem, Parts) :-
   !,
-  term_string(Prop, PropS),
+  pp_prop(Prop, PropS),
   Parts = [PropS, " by "|Rem1],
   pp_proof1(Proof, I, Rem, Rem1).
 pp_proof(Proof, _, Rem, Parts) :-
