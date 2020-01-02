@@ -2,6 +2,21 @@
 
 :- use_module([copl_parser]).
 
+:- begin_tests(parse_prop).
+  test(parse_plus_is_0) :-
+    parse_prop("Z plus Z is Z", Prop),
+    assertion(Prop == plus_is(z, z, z)).
+  test(parse_plus_is_1) :-
+    parse_prop("S(Z) plus S(S(Z)) is S(S(S(Z)))", Prop),
+    assertion(Prop == plus_is(s(z), s(s(z)), s(s(s(z))))).
+  test(parse_times_is_0) :-
+    parse_prop("Z times Z is Z", Prop),
+    assertion(Prop == times_is(z, z, z)).
+  test(parse_times_is_1) :-
+    parse_prop("S(S(Z)) times S(S(Z)) is S(S(S(S(Z))))", Prop),
+    assertion(Prop == times_is(s(s(z)), s(s(z)), s(s(s(s(z)))))).
+:- end_tests(parse_prop).
+
 :- begin_tests(parse_nat).
   test(parse_nat_0) :-
     parse_nat("Z", N),

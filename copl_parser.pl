@@ -1,6 +1,23 @@
 % vim: ft=prolog :
 
-:- module(copl_parser, [parse_nat/2, tokenize/2]).
+:- module(copl_parser, [parse_prop/2, parse_nat/2, tokenize/2]).
+
+parse_prop(S, Prop) :-
+  string(S),
+  !,
+  tokenize(S, Tokens),
+  parse_prop(Tokens, Prop).
+parse_prop(Tokens, Prop) :- parse_prop(Tokens, Prop, []).
+parse_prop(Tokens, plus_is(N1, N2, N3), Rem) :-
+  parse_nat(Tokens, N1, ['plus'|Rem1]),
+  parse_nat(Rem1, N2, ['is'|Rem2]),
+  parse_nat(Rem2, N3, Rem),
+  !.
+parse_prop(Tokens, times_is(N1, N2, N3), Rem) :-
+  parse_nat(Tokens, N1, ['times'|Rem1]),
+  parse_nat(Rem1, N2, ['is'|Rem2]),
+  parse_nat(Rem2, N3, Rem),
+  !.
 
 parse_nat(S, N) :-
   string(S),
