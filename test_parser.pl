@@ -15,6 +15,12 @@
   test(parse_times_is_1) :-
     parse_prop("S(S(Z)) times S(S(Z)) is S(S(S(S(Z))))", Prop),
     assertion(Prop == times_is(s(s(z)), s(s(z)), s(s(s(s(z)))))).
+  test(parse_is_less_than_0) :-
+    parse_prop("Z is less than Z", Prop),
+    assertion(Prop == is_less_than(z, z)).
+  test(parse_is_less_than_1) :-
+    parse_prop("S(S(Z)) is less than S(S(S(Z)))", Prop),
+    assertion(Prop == is_less_than(s(s(z)), s(s(s(z))))).
 :- end_tests(parse_prop).
 
 :- begin_tests(parse_nat).

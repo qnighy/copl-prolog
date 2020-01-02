@@ -41,6 +41,9 @@
   test(pp_times_is_1) :-
     pp_prop(times_is(s(s(z)), s(s(z)), s(s(s(s(z))))), S),
     assertion(S == "S(S(Z)) times S(S(Z)) is S(S(S(S(Z))))").
+  test(pp_is_less_than_0) :-
+    pp_prop(is_less_than(z, s(z)), S),
+    assertion(S == "Z is less than S(Z)").
 :- end_tests(pp_prop).
 
 :- begin_tests(pp_nat).

@@ -18,6 +18,10 @@ parse_prop(Tokens, times_is(N1, N2, N3), Rem) :-
   parse_nat(Rem1, N2, ['is'|Rem2]),
   parse_nat(Rem2, N3, Rem),
   !.
+parse_prop(Tokens, is_less_than(N1, N2), Rem) :-
+  parse_nat(Tokens, N1, ['is', 'less', 'than'|Rem1]),
+  parse_nat(Rem1, N2, Rem),
+  !.
 
 parse_nat(S, N) :-
   string(S),

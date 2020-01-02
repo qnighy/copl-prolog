@@ -47,6 +47,11 @@ pp_prop(times_is(N1, N2, N3), S) :-
   pp_nat(N2, N2S),
   pp_nat(N3, N3S),
   atomics_to_string([N1S, " times ", N2S, " is ", N3S], S).
+pp_prop(is_less_than(N1, N2), S) :-
+  !,
+  pp_nat(N1, N1S),
+  pp_nat(N2, N2S),
+  atomics_to_string([N1S, " is less than ", N2S], S).
 pp_prop(Prop, S) :-
   term_string(Prop, PropS),
   atomics_to_string(["<cannot pp ", PropS, ">"], S).
